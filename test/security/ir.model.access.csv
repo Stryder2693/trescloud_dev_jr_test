@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delivery_detail_manager,access_delivery_detail_manager,model_delivery_detail,test.group_delivery_detail_administrator,1,1,1,0
+access_delivery_detail_user,access_delivery_detail_user,model_delivery_detail,test.group_delivery_detail_user,1,0,0,0
+
+access_delivery_detail_line_manager,access_delivery_detail_line_manager,model_delivery_detail_line,test.group_delivery_detail_administrator,1,1,1,0
+access_delivery_detail_line_user,access_delivery_detail_line_user,model_delivery_detail_line,test.group_delivery_detail_user,1,0,0,0
