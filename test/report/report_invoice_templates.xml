@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//table[@name='invoice_line_table']" position="after">
+            <t t-foreach="o.delivery_detail_ids" t-as="detail">
+                <h3>Detalle de Entrega - <t t-esc="detail.picking_id.name or 'Sin picking'" /></h3>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Unidad de Medida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="detail.delivery_detail_line_ids" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line.qty" />
+                                </td>
+                                <td>
+                                    <t t-esc="line.uom_id.name" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+
+            <t t-if="o.sale_order_direct_id and o.sale_order_direct_id.picking_ids">
+                <t
+                    t-foreach="o.sale_order_direct_id.picking_ids.filtered(lambda p: p.state == 'done')"
+                    t-as="picking">
+                    <h3>Picking: <t t-esc="picking.name" /></h3>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad Entregada</th>
+                                <th>Unidad de Medida</th>
+                                <th>Número de Serie/Lote</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="picking.move_ids.filtered(lambda m: m.state == 'done')"
+                                t-as="move">
+                                <tr>
+                                    <td>
+                                        <t t-esc="move.product_id.display_name" />
+                                    </td>
+                                    <td>
+                                        <t t-esc="move.quantity_done" />
+                                    </td>
+                                    <td>
+                                        <t t-esc="move.product_uom.name" />
+                                    </td>
+                                    <td>
+                                        <td>
+                                            <t t-if="move.lot_ids">
+                                                <t t-set="lots"
+                                                    t-value="', '.join([lot.name for lot in move.lot_ids if lot.name])" />
+                                                <t t-esc="lots" />
+                                            </t>
+                                            <t t-if="not move.lot_ids">
+                                                Sin lote
+                                            </t>
+                                        </td>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>
