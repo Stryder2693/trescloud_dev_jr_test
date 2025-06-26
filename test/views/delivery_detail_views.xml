@@ -5,8 +5,8 @@
         <field name="model">delivery.detail</field>
         <field name="arch" type="xml">
             <tree string="Detalles de Entrega">
-                <field name="picking_id" readonly="1"/>
-                <field name="invoiced" readonly="1"/>
+                <field name="picking_id" readonly="1" />
+                <field name="invoiced" readonly="1" />
             </tree>
         </field>
     </record>
@@ -18,14 +18,15 @@
             <form string="Detalle de Entrega">
                 <sheet>
                     <group>
-                        <field name="picking_id" readonly="1"/>
-                        <field name="invoiced"/>
+                        <field name="picking_id" readonly="1" />
+                        <field name="account_move_id" readonly="1" />
+                        <field name="invoiced" />
                     </group>
                     <notebook>
                         <page string="Líneas de entrega">
                             <field name="delivery_detail_line_ids">
                                 <tree editable="bottom">
-                                    <field name="qty"  />
+                                    <field name="qty" />
                                     <field name="uom_id" />
                                 </tree>
                             </field>
@@ -35,4 +36,18 @@
             </form>
         </field>
     </record>
+
+    <!-- Acción para Delivery Detail -->
+    <record id="action_delivery_detail" model="ir.actions.act_window">
+        <field name="name">Detalle de Entrega</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">delivery.detail</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menú para Delivery Detail -->
+    <menuitem id="menu_delivery_detail"
+        name="Detalle de Entrega"
+        action="action_delivery_detail"
+        parent="account.menu_finance_receivables" />
 </odoo>

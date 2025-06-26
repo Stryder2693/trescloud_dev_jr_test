@@ -17,6 +17,9 @@
         #security
         'security/delivery_detail_security.xml',
         'security/ir.model.access.csv',
+        #report
+        'report/report_invoice_templates.xml',
+
     ],
     'installable': True,
     'application': True,

@@ -11,9 +11,20 @@
                     type="object"
                     icon="fa-pencil-square-o"
                     attrs="{'invisible': [('delivery_detail_count', '=', 0)]}">
-                    <field string="Detalles de entrega" name="delivery_detail_count" widget="statinfo"/>
+                    <field string="Detalles de entrega" name="delivery_detail_count"
+                        widget="statinfo" />
                 </button>
             </xpath>
         </field>
+    </record>
+
+    <record id="action_mark_invoiced_server" model="ir.actions.server">
+        <field name="name">Marcar detalle de entrega como facturado</field>
+        <field name="model_id" ref="model_delivery_detail" />
+        <field name="binding_model_id" ref="test.model_delivery_detail" />
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_mark_invoiced()</field>
+        <field name="groups_id" eval="[(4, ref('test.group_delivery_detail_administrator'))]" />
     </record>
 </odoo>

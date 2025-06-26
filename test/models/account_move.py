@@ -10,6 +10,9 @@ class AccountMove(models.Model):
     # ACTIONS
     # ------------------------------------------------------
     def action_show_delivery_details(self):
+        """
+        Muestra los detalles de entrega (delivery.detail) asociados a la factura (account.move).
+        Este método se utiliza para abrir una vista de lista y formulario de los detalles de entrega"""
         self.ensure_one()
 
         return {
@@ -29,6 +32,9 @@ class AccountMove(models.Model):
     # ------------------------------------------------------
     @api.model_create_multi
     def create(self, vals_list):
+        """
+        Sobrescribe el método create para crear detalles de entrega (delivery.detail) automáticamente
+        """
         moves = super().create(vals_list)
         moves.create_delivery_detail()
 
@@ -38,12 +44,25 @@ class AccountMove(models.Model):
     # ------------------------------------------------------
     
     def _compute_delivery_detail_count(self):
+        """"
+        Obtiene la cantidad de detalles de entrega (delivery.detail) asociados a cada factura (account.move).
+        """
         for move in self:
             
             count = self.env['delivery.detail'].sudo().search_count([
                 ('account_move_id', '=', move.id)
             ])
             move.delivery_detail_count = count
+
+    def _compute_delivery_detail_ids(self):
+        """
+        Obtiene los detalles de entrega (delivery.detail) asociados a cada factura (account.move).
+        """
+        for move in self:
+            details = self.env['delivery.detail'].sudo().search([
+                ('account_move_id', '=', move.id)
+            ])
+            move.delivery_detail_ids = details
 
     # ------------------------------------------------------
     # CONSTRAINTS AND VALIDATIONS
@@ -106,7 +125,13 @@ class AccountMove(models.Model):
     delivery_detail_count = fields.Integer(
         string="Delivery Details Count",
         compute='_compute_delivery_detail_count',
-        store=False,
+    )
+
+    delivery_detail_ids = fields.One2many(
+        'delivery.detail',
+        'account_move_id',
+        string='Detalles de Entrega',
+        compute='_compute_delivery_detail_ids',
     )
 
 

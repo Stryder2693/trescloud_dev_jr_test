@@ -10,6 +10,14 @@ class DeliveryDetail(models.Model):
     # ------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------
+    def action_mark_invoiced(self):
+        """
+        Marca los detalles de entrega como facturados solo si no están ya facturados
+        y pagada
+        """
+        for record in self:
+            if not record.invoiced and record.account_move_id and record.account_move_id.payment_state == 'paid':
+                record.invoiced = True
 
     # ------------------------------------------------------
     # CRUD METHODS
