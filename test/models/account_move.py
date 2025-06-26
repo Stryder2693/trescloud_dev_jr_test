@@ -64,6 +64,17 @@ class AccountMove(models.Model):
             ])
             move.delivery_detail_ids = details
 
+    def _compute_sale_order_direct_id(self):
+        """
+        Computa la orden de venta directa asociada a cada factura (account.move).
+        """
+        for move in self:
+            source_orders = move.line_ids.mapped('sale_line_ids.order_id')
+            if move.move_type != 'out_invoice' or len(source_orders) != 1:
+                move.sale_order_direct_id = False
+                continue
+            move.sale_order_direct_id = source_orders[0]
+
     # ------------------------------------------------------
     # CONSTRAINTS AND VALIDATIONS
     # ------------------------------------------------------
@@ -132,6 +143,13 @@ class AccountMove(models.Model):
         'account_move_id',
         string='Detalles de Entrega',
         compute='_compute_delivery_detail_ids',
+    )
+
+    sale_order_direct_id = fields.Many2one(
+        'sale.order',
+        string='Orden de Venta Directa',
+        compute='_compute_sale_order_direct_id',
+        store=True,
     )
 
 
